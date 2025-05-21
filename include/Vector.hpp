@@ -12,6 +12,7 @@ class vec3 {
 
     vec3() : e{0,0,0} {}
     vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
+    vec3(double v) : e{v, v, v} {}
 
     double x() const { return e[0]; }
     double y() const { return e[1]; }
@@ -99,11 +100,51 @@ inline vec3 normalize(const vec3& v) {
     return v / v.length();
 }
 
-// only rotates the x and z
+// only rotates the x and z around the y axis
+// left handed y up superiority
 inline vec3 rotate(const vec3& v, double theta) {
     double cosTheta = cos(theta * (PI/180.0));
     double sinTheta = sin(theta * (PI/180.0));
-    return vec3()
+    return vec3(v.x()*cosTheta - v.y()*sinTheta, v.x()*sinTheta + v.y()*cosTheta, v.z());
+}
+
+// rotate point v around point j on the xz plane
+inline vec3 rotate(const vec3& v, double theta, const vec3& j) {
+    return rotate(v - j, theta);
+}
+
+// rotate point v around the origin using all 3 sigmas axes
+// yaw is rotation around the y axis
+// pitch is rotation around the x axis
+inline vec3 rotate(const vec3& v, double x, double y, double z) {
+    // generate a 3x3 rotation matrix
+    float sx = sin(x);
+    float sy = sin(y);
+    float sz = sin(z);
+    float cx = cos(x);
+    float cy = cos(y);
+    float cz = cos(z);
+    float m1, m2, m3, m4, m5, m6, m7, m8, m9;
+
+    m1 = cx*cz - (sx*sy*sz);
+    m2 = -sz*cy;
+    m3 = sy*cx*sz + sx*cz;
+    m4 = sy*sx*cz + cx*sz;
+    m5 = cy*cz;
+    m6 = sx*sz - sy*cx*cz;
+    m7 = -sy*cy;
+    m8 = sy;
+    m9 = cy * cx;
+
+    return vec3(
+        m1*v.x() + m2*v.y() + m3*v.z(),
+        m4*v.x() + m5*v.y() + m6*v.z(),
+        m7*v.x() + m8*v.y() + m9*v.z()
+    );
+}
+
+inline vec3 rotate(const vec3& v, double x, double y, double z, const vec3& j) {
+    return rotate(v - j, x, y, z);
 }
 
 #endif
