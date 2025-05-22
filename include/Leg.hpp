@@ -43,7 +43,7 @@ class Leg {
         int id;
 
         const  double ZRest =  2.75591;
-        static double YRest; // this is how much the robot is moved up i think. y is up and you can cry about it 🤫🧏‍♂️
+        double YRest = 0.0; // this is how much the robot is moved up i think. y is up and you can cry about it 🤫🧏‍♂️
 
         bool disabled = false;
         

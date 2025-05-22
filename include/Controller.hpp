@@ -1,4 +1,4 @@
-#include <Bluepad32.h>
+#include <bluepad32.h>
 #include <ESP32Servo.h>
 
 ControllerPtr myControllers[BP32_MAX_GAMEPADS];
@@ -65,17 +65,6 @@ void dumpGamepad(ControllerPtr ctl) {
     );
 }
 
-
-/*void processGamepad(ControllerPtr ctl) {
-
-    if (ctl->throttle() > 10){
-        if (lift < maxLift) {
-            lift += 5;
-        }
-    }
- 
-}*/
-
 void processControllers(void(*callback)(ControllerPtr)) {
     for (auto myController : myControllers) {
         if (myController && myController->isConnected() && myController->hasData()) {
@@ -88,21 +77,7 @@ void processControllers(void(*callback)(ControllerPtr)) {
     }
 }
 
-// void setup() {
-//     Serial.begin(115200);
-// }
-
-
-const uint8_t* bdAddr = BP32.localBdAddress();
-// Serial.printf("Firmware: %s\n", BP32.firmwareVersion());
-// Serial.printf("BD Addr: %2X:%2X:%2X:%2X:%2X:%2X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
-BP32.setup(&onConnectedController, &onDisconnectedController);
-BP32.enableVirtualDevice(false);
-
-Bluepad32
-
 
 void updateController(void(*callback)(ControllerPtr)) {
-    bool dataUpdated = BP32.update();
-    if (dataUpdated) processControllers(callback);
+    processControllers(callback);
 }

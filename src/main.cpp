@@ -2,8 +2,8 @@
 
 #include "Leg.hpp"
 #include "Controller.hpp"
-#include <Bluepad32.h>
-#include <optional>
+#include <bluepad32.h>
+//#include <optional>
 
 double lift = 0;
 const double maxLift = 15.748;
@@ -34,6 +34,10 @@ void processGamepad(ControllerPtr ctl) {
 
 void setup() {
     Serial.begin(115200);
+
+    const uint8_t* bdAddr = BP32.localBdAddress();
+    BP32.setup(&onConnectedController, &onDisconnectedController);
+
     legs[0] = new Leg(18,19,21);
     for (int i = 1; i < 6; i++) {
         legs[i] = new Leg();
@@ -46,6 +50,7 @@ void setup() {
 
 void loop() {
     // put your main code here, to run repeatedly:
+    BP32.update();
     updateController(processGamepad);
     
     for (int i = 0; i < 6; i++) {
