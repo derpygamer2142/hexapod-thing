@@ -142,6 +142,25 @@ class Leg {
             return point + legPosition;
         }
 
+        vec3 getCurrentTargetPoint() {
+            double yPos = 0.0;
+            if (progress >= pushTime) {
+                yPos = 1.0 - 2*fabs(progress-(pushTime+0.5*(1-pushTime)))/(1.0-pushTime); // sigma equation to mix the time the leg is on the ground and the time in the air
+            }
+            
+            double angle = 45.0; // the angle the end of the leg should be placed at relative to the fixation point
+
+            double offset = progress < pushTime ?
+                progress/pushTime :
+                1.0 - (progress-pushTime)/(1-progress);
+
+            angle += 50.0*offset;
+
+            vec3 point = rotate(vec3(0.0, -4.0, 1.0), angle); // the position of the end of the leg relative to where the leg is fixed
+
+            return point + legPosition;
+        }
+
         void updateProgress() {
             // todo: implement controller movement into this
             double elapsed = static_cast<double>(millis() - lastUpdate);
@@ -156,7 +175,7 @@ class Leg {
             if (!disabled) {
                 updateProgress();
 
-                vec3 angles = findJointAngles(getCurrentTargetPoint(targetPosition));
+                vec3 angles = findJointAngles(getCurrentTargetPoint());
 
                 coaxiaServo.write(static_cast<int>(angles.x()));
                 femurServo.write(static_cast<int>(angles.y()));

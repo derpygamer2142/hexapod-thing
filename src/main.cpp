@@ -5,7 +5,7 @@
 #include <bluepad32.h>
 //#include <optional>
 
-double lift = 0;
+double lift = 3.0;
 const double maxLift = 15.748;
 
 
@@ -15,9 +15,21 @@ Leg* legs[6];
 vec3 controllerTargetPosition = vec3(0.0);
 
 void processGamepad(ControllerPtr ctl) {
-    if (ctl->throttle() > 10){
+    if (ctl->r2() > 10){
         if (lift < maxLift) {
             lift += 0.19685;
+            lift = min(10.0, lift);
+
+            for (int i = 0; i < 6; i++) {
+                legs[i]->YRest = lift;
+            }
+        }
+    }
+
+        if (ctl->l2() > 10){
+        if (lift < maxLift) {
+            lift -= 0.19685;
+            lift = max(3.0, lift);
 
             for (int i = 0; i < 6; i++) {
                 legs[i]->YRest = lift;
@@ -27,9 +39,10 @@ void processGamepad(ControllerPtr ctl) {
 
     controllerTargetPosition = 4.0*normalize(vec3(static_cast<double>(ctl->axisX())/512.0, 0.0, static_cast<double>(ctl->axisY())/512.0)); // target position of the controller with length 4
 
+
+    //dumpGamepad(ctl);
     
-    dumpGamepad(ctl);
- 
+    if (ctl->a()) Serial.println("A button pressed");
 }
 
 void setup() {
@@ -46,6 +59,7 @@ void setup() {
 
     Serial.printf("Firmware: %s\n", BP32.firmwareVersion());
     Serial.printf("BD Addr: %2X:%2X:%2X:%2X:%2X:%2X\n", bdAddr[0], bdAddr[1], bdAddr[2], bdAddr[3], bdAddr[4], bdAddr[5]);
+    Serial.println("Init");
 }
 
 void loop() {
