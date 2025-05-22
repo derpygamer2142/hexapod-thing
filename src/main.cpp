@@ -6,7 +6,7 @@
 //#include <optional>
 
 double lift = 3.0;
-const double maxLift = 15.748;
+const double maxLift = 10.0;
 
 
 
@@ -18,7 +18,6 @@ void processGamepad(ControllerPtr ctl) {
     if (ctl->r2() > 10){
         if (lift < maxLift) {
             lift += 0.19685;
-            lift = min(10.0, lift);
 
             for (int i = 0; i < 6; i++) {
                 legs[i]->YRest = lift;
@@ -27,15 +26,14 @@ void processGamepad(ControllerPtr ctl) {
     }
 
         if (ctl->l2() > 10){
-        if (lift < maxLift) {
             lift -= 0.19685;
             lift = max(3.0, lift);
 
             for (int i = 0; i < 6; i++) {
                 legs[i]->YRest = lift;
             }
+            
         }
-    }
 
     controllerTargetPosition = 4.0*normalize(vec3(static_cast<double>(ctl->axisX())/512.0, 0.0, static_cast<double>(ctl->axisY())/512.0)); // target position of the controller with length 4
 

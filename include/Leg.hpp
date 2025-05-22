@@ -120,6 +120,9 @@ class Leg {
             double A = atan(Z / H) * (180 / M_PI);  // BECAUSE Z REST IS NEGATIVE, THIS RETURNS A NEGATIVE VALUE
             double J2 = (B + A);  // BECAUSE 'A' IS NEGATIVE AT REST WE NEED TO INVERT '-' TO '+'
 
+            Serial.printf("Target angles: %d, %d, %d\n", J1, J2, J3);
+
+
             return vec3(J1, J2, J3);
         }
 
@@ -138,7 +141,7 @@ class Leg {
             angle += 50.0*offset;
 
             vec3 point = rotate(vec3(0.0, -4.0, 1.0/distance(legPosition, targetPosition)), angle); // the position of the end of the leg relative to where the leg is fixed
-
+            
             return point + legPosition;
         }
 
@@ -158,7 +161,8 @@ class Leg {
 
             vec3 point = rotate(vec3(0.0, -4.0, 1.0), angle); // the position of the end of the leg relative to where the leg is fixed
 
-            return point + legPosition;
+            vec3 o = point + legPosition;
+            return ;
         }
 
         void updateProgress() {
@@ -168,7 +172,9 @@ class Leg {
 
 
 
-            progress += elapsed/200.0; // this should only go up by ~.0025 each tick
+            progress += elapsed/50.0; // this should only go up by ~.0025 each tick
+
+            if (progress > 1.0) progress = 0.0;
         }
 
         void updateLeg(vec3 targetPosition) {
