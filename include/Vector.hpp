@@ -1,10 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
-
 #include <cmath>
 #include <iostream>
 
-const double PI = 3.14159265358;
+
 
 class vec3 {
   public:
@@ -96,6 +95,10 @@ inline double length(const vec3& v) {
     return v.length();
 }
 
+inline double distance(const vec3& v, const vec3& j) {
+    return length(v-j);
+}
+
 inline vec3 normalize(const vec3& v) {
     return v / v.length();
 }
@@ -103,8 +106,8 @@ inline vec3 normalize(const vec3& v) {
 // only rotates the x and z around the y axis
 // left handed y up superiority
 inline vec3 rotate(const vec3& v, double theta) {
-    double cosTheta = cos(theta * (PI/180.0));
-    double sinTheta = sin(theta * (PI/180.0));
+    double cosTheta = cos(theta * (M_PI/180.0));
+    double sinTheta = sin(theta * (M_PI/180.0));
     return vec3(v.x()*cosTheta - v.y()*sinTheta, v.x()*sinTheta + v.y()*cosTheta, v.z());
 }
 
