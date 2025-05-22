@@ -162,7 +162,7 @@ class Leg {
             vec3 point = rotate(vec3(0.0, -4.0, 1.0), angle); // the position of the end of the leg relative to where the leg is fixed
 
             vec3 o = point + legPosition;
-            return ;
+            return o;
         }
 
         void updateProgress() {
